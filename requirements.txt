@@ -1,0 +1,5 @@
+numpy==2.3.2
+pillow==11.3.0
+pycryptodome==3.23.0
+setuptools==72.1.0
+wheel==0.45.1
