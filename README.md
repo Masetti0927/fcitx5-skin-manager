@@ -1,6 +1,6 @@
 # 简介
 本项目预计开发一个拥有GUI，可以同时在一个程序中管理、配置fcitx5输入法的主题，而不用打开KDE系统设置配置fcitx5的应用。
-项目设计ssf皮肤处理、解密与整理部分的源代码来自 https://github.com/fkxxyz/ssfconv 。
+项目涉及ssf皮肤处理、解密与整理部分的源代码来自 https://github.com/fkxxyz/ssfconv 。
 
 ## 缺陷
 
