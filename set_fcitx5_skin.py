@@ -9,7 +9,6 @@ THEME_DIRS = [
     Path("/usr/share/fcitx5/themes")
 ]
 
-
 def list_themes():
     themes = []
     for directory in THEME_DIRS:
@@ -35,7 +34,7 @@ def change_theme(theme_name):
     # 写回配置
     iface.SetConfig('fcitx://config/addon/classicui', dbus.Dictionary(config_dict, signature='sv'))
     iface.ReloadConfig()
-    print(f"✅ 已切换到主题: {theme_name}")
+    print(f"已切换到主题: {theme_name}")
 
 def main():
     themes = list_themes()
@@ -43,7 +42,7 @@ def main():
         print("未找到可用主题，请检查主题目录。")
         return
 
-    print("🎨 可用主题列表：")
+    print("可用主题列表：")
     for idx, name in enumerate(themes, start=1):
         print(f"{idx}. {name}")
 
@@ -52,9 +51,9 @@ def main():
         if 1 <= choice <= len(themes):
             change_theme(themes[choice - 1])
         else:
-            print("❌ 无效的编号")
+            print("无效的编号")
     except ValueError:
-        print("❌ 请输入数字编号")
+        print("请输入数字编号")
 
 
 if __name__ == "__main__":
