@@ -115,11 +115,9 @@ ssfconv <src> [dest] [-t type]
 源文件是必选参数，目标文件可选，转换的目标类型 -t 是可选参数，type值是下面四个值之一：
 
 ```
-fcitx			可直接用于fcitx的文件夹
 fcitx5			可直接用于fcitx5的文件夹
 dir				解包后的文件夹
-encrypted		加密的ssf皮肤
-zip				未加密的ssf皮肤（zip）
+ssf			未加密的ssf皮肤（zip）
 ```
 
 默认是转换为 fcitx 格式。
