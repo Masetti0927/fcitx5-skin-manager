@@ -2,6 +2,8 @@ import locale
 import os
 import gi
 gi.require_version("Gtk", "3.0")
+gi.require_version("Pango", "1.0")
+from gi.repository import Pango
 from gi.repository import Gtk
 
 from config import THEME_DIRS
@@ -32,13 +34,14 @@ def read_metadata(path):
     localized_key = f"Name[{lang[0]}]"
     display_name = metadata.get(localized_key) or metadata.get("Name")
     metadata["DisplayName"] = display_name
+    metadata["Description"] = metadata.get("Description", "")
     return metadata
 
 def get_themes():
     '''
     :return: 返回系统当中的theme字典
     '''
-    themes = {}
+    themes = []
     for theme_dir in THEME_DIRS:
         if not os.path.isdir(theme_dir):
             continue
@@ -46,45 +49,48 @@ def get_themes():
             conf_path = os.path.join(theme_dir, folder, "theme.conf")
             meta = read_metadata(conf_path)
             if meta:
-                name = meta.get("DisplayName", folder)
-                themes[folder] = name
+                themes.append((meta["DisplayName"], conf_path.rsplit("/", 2)[0] + "/" + folder, meta["Description"]))
     return themes
 
 class ThemeSelector(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title="Fcitx5 皮肤选择器")
         self.set_border_width(10)
-        self.set_default_size(400, 300)
+        self.set_default_size(600, 300)
 
-        self.liststore = Gtk.ListStore(str, str)  # 展示名, 文件夹名
+        # 展示名, 文件夹路径, 描述
+        self.liststore = Gtk.ListStore(str, str, str)
         self.treeview = Gtk.TreeView(model=self.liststore)
 
         renderer = Gtk.CellRendererText()
-        column = Gtk.TreeViewColumn("皮肤", renderer, text=0)
-        self.treeview.append_column(column)
-
-        column2 = Gtk.TreeViewColumn("路径", renderer, text=1)
-        self.treeview.append_column(column2)
+        # 为过长的描述末尾添加省略
+        # renderer.set_property("ellipsize", Pango.EllipsizeMode.END)
+        renderer.set_property("wrap-mode", Pango.WrapMode.WORD_CHAR) #为过长的描述自动换行
+        renderer.set_property("wrap-width", 300)
+        self.treeview.append_column(Gtk.TreeViewColumn("皮肤", renderer, text=0))
+        self.treeview.append_column(Gtk.TreeViewColumn("描述", renderer, text=1))
+        self.treeview.append_column(Gtk.TreeViewColumn("路径", renderer, text=2))
 
         self.treeview.connect("row-activated", self.on_row_activated)
 
         scroll = Gtk.ScrolledWindow()
+        scroll.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
         scroll.add(self.treeview)
         self.add(scroll)
 
         self.load_themes()
 
     def load_themes(self):
-        themes = get_themes()
-        for folder, name in themes.items():
-            self.liststore.append([name, folder])
+        for display_name, path, desc in get_themes():
+            self.liststore.append([display_name, desc,path])
 
     def on_row_activated(self, treeview, path, column):
         model = treeview.get_model()
         tree_iter = model.get_iter(path)
         name = model.get_value(tree_iter, 0)
-        folder = model.get_value(tree_iter, 1)
-        print(f"你选择了皮肤：{name}（文件夹名：{folder}）")
+        folder_path = model.get_value(tree_iter, 1)
+        description = model.get_value(tree_iter, 2)
+        print(f"你选择了皮肤：{name}\n路径：{folder_path}\n描述：{description}")
 
 if __name__ == "__main__":
     win = ThemeSelector()
