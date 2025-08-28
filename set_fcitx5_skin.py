@@ -1,13 +1,8 @@
 #!/usr/bin/env python3
 import os
-from pathlib import Path
 import dbus
+from config import THEME_DIRS
 
-# 主题搜索路径
-THEME_DIRS = [
-    Path.home() / ".local/share/fcitx5/themes",
-    Path("/usr/share/fcitx5/themes")
-]
 
 def list_themes():
     themes = []
