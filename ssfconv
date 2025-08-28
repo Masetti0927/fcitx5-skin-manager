@@ -111,7 +111,7 @@ def getImageAvg(image_path, area = (0, 0, 0, 0)):
     
     # 算出区域内所有象素点的平均值
     a = np.asarray(image)
-    r = g = b = 0
+    r = g = b = np.int32(0) #修正转换过程数值溢出
     count = 0
     if a.shape[2] == 4:
         for y in range(y1, y2):
