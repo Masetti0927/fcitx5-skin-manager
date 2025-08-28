@@ -629,7 +629,7 @@ def main(args):
     if os.path.isfile(args.src):
         
         # 确定目标目录
-        if args.type == 'ssf':
+        if args.type == 'zip':
             tmp_dir = tempfile.mkdtemp()
             dest_dir = tmp_dir
         else:
@@ -649,7 +649,7 @@ def main(args):
     result = 255
     if args.type == 'fcitx5':
         result = ssf2fcitx5(skin_dir)
-    elif args.type == 'ssf':
+    elif args.type == 'zip':
         file_list = os.listdir(skin_dir)
         with zipfile.ZipFile(args.dest, 'w') as zf:
             for file in file_list:
@@ -670,7 +670,7 @@ if __name__ == '__main__':
         help = 'The type of destination path file (folder).' + \
             'The default is fcitx5.',
         default = 'fcitx5',
-        choices = ['fcitx5', 'dir', 'ssf'])
+        choices = ['fcitx5', 'dir', 'zip'])
     args = parser.parse_args()
     
     exit(main(args))
