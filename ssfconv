@@ -1187,9 +1187,6 @@ def main(args):
             for file in file_list:
                 zf.write(skin_dir + os.sep + file, file)
         result = 0
-    elif args.type == 'encrypted':
-        assert False
-        # TODO 还没实现转换成加密的 ssf
     
     if tmp_dir:
         shutil.rmtree(tmp_dir)
@@ -1203,9 +1200,9 @@ if __name__ == '__main__':
     parser.add_argument('dest', help = 'Output path')
     parser.add_argument('--type', '-t',
         help = 'The type of destination path file (folder).' + \
-            'The default is fcitx.',
-        default = 'fcitx',
-        choices = ['fcitx', 'fcitx5', 'dir', 'encrypted', 'zip'])
+            'The default is fcitx5.',
+        default = 'fcitx5',
+        choices = ['fcitx', 'fcitx5', 'dir', 'zip'])
     args = parser.parse_args()
     
     exit(main(args))
