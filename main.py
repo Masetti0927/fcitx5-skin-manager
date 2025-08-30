@@ -1,9 +1,9 @@
 # main.py
-from theme_gui import ThemeSelector
+from main_window import MainWindow
 from gi.repository import Gtk
 
 def main():
-    win = ThemeSelector()
+    win = MainWindow()
     win.connect("destroy", Gtk.main_quit)
     win.show_all()
     Gtk.main()

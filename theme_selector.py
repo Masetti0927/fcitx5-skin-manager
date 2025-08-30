@@ -6,11 +6,9 @@ from gi.repository import Gtk, Pango,Gdk
 
 from theme_utils import get_themes
 
-class ThemeSelector(Gtk.Window):
+class ThemeSelector(Gtk.Frame):
     def __init__(self):
-        super().__init__(title="Fcitx5 皮肤选择器")
-        self.set_border_width(10)
-        self.set_default_size(600, 300)
+        super().__init__(label="主题选择器")
 
         self.liststore = Gtk.ListStore(str, str, str,str)
         self.treeview = Gtk.TreeView(model=self.liststore)
