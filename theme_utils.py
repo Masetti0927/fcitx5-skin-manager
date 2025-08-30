@@ -20,6 +20,7 @@ def read_metadata(path):
                 metadata[key.strip()] = value.strip()
     localized_key = f"Name[{lang[0]}]"
     display_name = metadata.get(localized_key) or metadata.get("Name")
+    metadata["Author"] = metadata.get("Author", "unknown")
     metadata["DisplayName"] = display_name
     metadata["Description"] = metadata.get("Description", "")
     return metadata
@@ -33,5 +34,5 @@ def get_themes():
             conf_path = os.path.join(theme_dir, folder, "theme.conf")
             meta = read_metadata(conf_path)
             if meta:
-                themes.append((meta["DisplayName"], os.path.join(theme_dir, folder), meta["Description"]))
+                themes.append((meta["DisplayName"],meta["Author"],meta["Description"],os.path.join(theme_dir, folder)))
     return themes

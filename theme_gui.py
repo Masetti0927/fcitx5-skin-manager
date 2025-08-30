@@ -12,7 +12,7 @@ class ThemeSelector(Gtk.Window):
         self.set_border_width(10)
         self.set_default_size(600, 300)
 
-        self.liststore = Gtk.ListStore(str, str, str)
+        self.liststore = Gtk.ListStore(str, str, str,str)
         self.treeview = Gtk.TreeView(model=self.liststore)
 
         self._setup_columns()
@@ -25,8 +25,9 @@ class ThemeSelector(Gtk.Window):
         renderer.set_property("wrap-width", 300)
 
         self.treeview.append_column(Gtk.TreeViewColumn("皮肤", renderer, text=0))
-        self.treeview.append_column(Gtk.TreeViewColumn("描述", renderer, text=1))
-        self.treeview.append_column(Gtk.TreeViewColumn("路径", renderer, text=2))
+        self.treeview.append_column(Gtk.TreeViewColumn("作者", renderer, text=1))
+        self.treeview.append_column(Gtk.TreeViewColumn("描述", renderer, text=2))
+        self.treeview.append_column(Gtk.TreeViewColumn("路径", renderer, text=3))
 
         self.treeview.connect("row-activated", self.on_row_activated)
 
@@ -37,13 +38,14 @@ class ThemeSelector(Gtk.Window):
         self.add(scroll)
 
     def load_themes(self):
-        for display_name, path, desc in get_themes():
-            self.liststore.append([display_name, desc, path])
+        for display_name,author,desc,path in get_themes():
+            self.liststore.append([display_name,author,desc, path])
 
     def on_row_activated(self, treeview, path, column):
         model = treeview.get_model()
         tree_iter = model.get_iter(path)
         name = model.get_value(tree_iter, 0)
-        folder_path = model.get_value(tree_iter, 2)
-        description = model.get_value(tree_iter, 1)
-        print(f"你选择了皮肤：{name}\n路径：{folder_path}\n描述：{description}")
+        author = model.get_value(tree_iter, 1)
+        description = model.get_value(tree_iter, 2)
+        folder_path = model.get_value(tree_iter, 3)
+        print(f"你选择了皮肤：{name}\n作者：{author}\n描述：{description}\n路径：{folder_path}")
