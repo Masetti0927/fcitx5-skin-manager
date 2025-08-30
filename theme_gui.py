@@ -2,7 +2,7 @@
 import gi
 gi.require_version("Gtk", "3.0")
 gi.require_version("Pango", "1.0")
-from gi.repository import Gtk, Pango
+from gi.repository import Gtk, Pango,Gdk
 
 from theme_utils import get_themes
 
@@ -29,7 +29,8 @@ class ThemeSelector(Gtk.Window):
         self.treeview.append_column(Gtk.TreeViewColumn("描述", renderer, text=2))
         self.treeview.append_column(Gtk.TreeViewColumn("路径", renderer, text=3))
 
-        self.treeview.connect("row-activated", self.on_row_activated)
+        self.treeview.connect("button-press-event", self.on_row_clicked)
+
 
     def _setup_scroll(self):
         scroll = Gtk.ScrolledWindow()
@@ -49,3 +50,11 @@ class ThemeSelector(Gtk.Window):
         description = model.get_value(tree_iter, 2)
         folder_path = model.get_value(tree_iter, 3)
         print(f"你选择了皮肤：{name}\n作者：{author}\n描述：{description}\n路径：{folder_path}")
+
+    def on_row_clicked(self, treeview, event):
+        if event.button == 1 and event.type == Gdk.EventType.BUTTON_PRESS:  # 左键单击
+            path_info = treeview.get_path_at_pos(int(event.x), int(event.y))
+            if path_info is not None:
+                path, column, cell_x, cell_y = path_info
+                self.on_row_activated(treeview, path, column)
+
