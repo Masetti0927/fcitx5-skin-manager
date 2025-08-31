@@ -1,17 +1,20 @@
 # theme_selector.py
 import gi
+import os
 gi.require_version("Gtk", "3.0")
 gi.require_version("Pango", "1.0")
 from gi.repository import Gtk, Pango,Gdk
 
-from theme_utils import get_themes
+from theme_utils import get_themes,get_default_theme
 
 class ThemeSelector(Gtk.Frame):
     def __init__(self):
         super().__init__(label="主题选择器")
 
-        self.liststore = Gtk.ListStore(str, str, str,str)
+        # 是否为默认（图标名）、皮肤名、作者、描述、路径
+        self.liststore = Gtk.ListStore(str, str, str, str, str)
         self.treeview = Gtk.TreeView(model=self.liststore)
+        self.default_theme_name = get_default_theme()
 
         self._setup_columns()
         self._setup_scroll()
@@ -19,13 +22,15 @@ class ThemeSelector(Gtk.Frame):
 
     def _setup_columns(self):
         renderer = Gtk.CellRendererText()
+        icon_renderer = Gtk.CellRendererPixbuf()
         renderer.set_property("wrap-mode", Pango.WrapMode.WORD_CHAR)
         renderer.set_property("wrap-width", 300)
 
-        self.treeview.append_column(Gtk.TreeViewColumn("皮肤", renderer, text=0))
-        self.treeview.append_column(Gtk.TreeViewColumn("作者", renderer, text=1))
-        self.treeview.append_column(Gtk.TreeViewColumn("描述", renderer, text=2))
-        self.treeview.append_column(Gtk.TreeViewColumn("路径", renderer, text=3))
+        self.treeview.append_column(Gtk.TreeViewColumn("当前", icon_renderer, icon_name=0))
+        self.treeview.append_column(Gtk.TreeViewColumn("主题", renderer, text=1))
+        self.treeview.append_column(Gtk.TreeViewColumn("作者", renderer, text=2))
+        self.treeview.append_column(Gtk.TreeViewColumn("描述", renderer, text=3))
+        self.treeview.append_column(Gtk.TreeViewColumn("路径", renderer, text=4))
 
         self.treeview.connect("button-press-event", self.on_row_clicked)
 
@@ -37,8 +42,10 @@ class ThemeSelector(Gtk.Frame):
         self.add(scroll)
 
     def load_themes(self):
-        for display_name,author,desc,path in get_themes():
-            self.liststore.append([display_name,author,desc, path])
+        default_name = self.default_theme_name  # 比如 "default"
+        for name, author, desc, path in get_themes():
+            icon = "emblem-ok-symbolic" if os.path.basename(path) == default_name else None
+            self.liststore.append([icon,name, author, desc, path])
 
     def on_row_activated(self, treeview, path, column):
         model = treeview.get_model()

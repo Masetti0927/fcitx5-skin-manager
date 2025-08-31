@@ -6,7 +6,7 @@ from theme_selector import ThemeSelector
 
 class MainWindow(Gtk.Window):
     def __init__(self):
-        super().__init__(title="Fcitx5皮肤管理器")
+        super().__init__(title="Fcitx5主题管理器")
         self.set_default_size(800, 500)
 
         grid = Gtk.Grid()
@@ -18,12 +18,10 @@ class MainWindow(Gtk.Window):
         grid.set_margin_end(10)
 
         # 左侧：主题选择器区域
-        # theme_frame = Gtk.Frame()
         theme_frame = ThemeSelector()
         theme_frame.set_hexpand(True)
         theme_frame.set_vexpand(True)
         theme_frame.set_size_request(500, -1)  # 限制最大宽度
-        theme_frame.add(Gtk.Label(label="这里是主题预览或选择器"))
         grid.attach(theme_frame, 0, 0, 1, 1)
 
         # 右侧：按钮区域
@@ -31,7 +29,7 @@ class MainWindow(Gtk.Window):
         button_box.set_valign(Gtk.Align.START)
         button_box.set_margin_top(10)  # 顶部对齐左侧内容
 
-        for label in ["设置", "导入", "删除", "应用"]:
+        for label in ["打开主题文件夹", "导入", "删除", "应用"]:
             btn = Gtk.Button(label=label)
             btn.set_size_request(100, 40)  # 设置按钮尺寸
             button_box.pack_start(btn, False, False, 0)
