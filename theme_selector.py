@@ -50,10 +50,10 @@ class ThemeSelector(Gtk.Frame):
     def on_row_activated(self, treeview, path, column):
         model = treeview.get_model()
         tree_iter = model.get_iter(path)
-        name = model.get_value(tree_iter, 0)
-        author = model.get_value(tree_iter, 1)
-        description = model.get_value(tree_iter, 2)
-        folder_path = model.get_value(tree_iter, 3)
+        name = model.get_value(tree_iter, 1)
+        author = model.get_value(tree_iter, 2)
+        description = model.get_value(tree_iter, 3)
+        folder_path = model.get_value(tree_iter, 4)
         print(f"你选择了皮肤：{name}\n作者：{author}\n描述：{description}\n路径：{folder_path}")
 
     def on_row_clicked(self, treeview, event):
