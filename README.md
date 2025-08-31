@@ -10,7 +10,7 @@
   - 一些典型例子：https://pinyin.sogou.com/skins/detail/view/info/610817
 
 ## 声明
-本项目不提供相关的ssf文件下载，也不打算将相关内容，如自动获取搜狗的皮肤库、在线预览、实时挑选等纳入To do list。
+本项目不提供相关的ssf文件下载，目前也不打算将相关内容，如自动获取搜狗的皮肤库、在线预览、即时下载等纳入To do list。
  - 详见 https://pinyin.sogou.com/skins/robots.txt
 
 需要ssf格式的输入法皮肤，可以前往 https://pinyin.sogou.com/skins/ 进行下载。
