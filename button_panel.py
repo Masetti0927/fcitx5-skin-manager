@@ -51,4 +51,5 @@ class ButtonPanel(Gtk.Frame):
         pass
 
     def on_apply(self,button):
-        change_theme(self.parent.picked_theme)
+        change_theme(self.parent.default_theme)
+        self.parent.theme_frame.refresh()

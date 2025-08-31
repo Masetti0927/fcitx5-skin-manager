@@ -54,8 +54,8 @@ class ThemeSelector(Gtk.Frame):
         author = model.get_value(tree_iter, 2)
         description = model.get_value(tree_iter, 3)
         folder_path = model.get_value(tree_iter, 4)
-        self.parent.picked_theme = os.path.basename(folder_path)
-        print("调试信息："+self.parent.picked_theme)
+        self.parent.default_theme = os.path.basename(folder_path)
+        # print("调试信息："+self.parent.picked_theme)
         print(f"你选择了皮肤：{name}\n作者：{author}\n描述：{description}\n路径：{folder_path}")
 
     def on_row_clicked(self, treeview, event):
@@ -65,3 +65,9 @@ class ThemeSelector(Gtk.Frame):
                 path, column, cell_x, cell_y = path_info
                 self.on_row_activated(treeview, path, column)
 
+    def refresh(self):
+        selected_path = self.treeview.get_cursor()[0]  # 获取当前选中行
+        self.liststore.clear()
+        self.load_themes()
+        if selected_path:
+            self.treeview.set_cursor(selected_path)
