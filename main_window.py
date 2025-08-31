@@ -4,10 +4,13 @@ gi.require_version("Pango", "1.0")
 from gi.repository import Gtk, Pango,Gdk
 from theme_selector import ThemeSelector
 from button_panel import ButtonPanel
+from theme_utils import get_themes,get_default_theme
 
 class MainWindow(Gtk.Window):
     def __init__(self):
         super().__init__(title="Fcitx5主题管理器")
+        self.default_theme = get_default_theme()
+        self.theme_list = get_themes()
         self.set_default_size(800, 500)
 
         grid = Gtk.Grid()
@@ -19,7 +22,7 @@ class MainWindow(Gtk.Window):
         grid.set_margin_end(20)
 
         # 左侧：主题选择器区域
-        theme_frame = ThemeSelector()
+        theme_frame = ThemeSelector(self.default_theme,self.theme_list)
         theme_frame.set_hexpand(True)
         theme_frame.set_vexpand(True)
         theme_frame.set_size_request(500, -1)  # 限制最大宽度

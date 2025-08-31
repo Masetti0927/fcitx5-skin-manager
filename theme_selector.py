@@ -8,14 +8,15 @@ from gi.repository import Gtk, Pango,Gdk
 from theme_utils import get_themes,get_default_theme
 
 class ThemeSelector(Gtk.Frame):
-    def __init__(self):
+    def __init__(self,default_theme,theme_list):
         super().__init__(label=None)
 
         self.set_shadow_type(Gtk.ShadowType.NONE)
         # 是否为默认（图标名）、皮肤名、作者、描述、路径
         self.liststore = Gtk.ListStore(str, str, str, str, str)
         self.treeview = Gtk.TreeView(model=self.liststore)
-        self.default_theme_name = get_default_theme()
+        self.default_theme_name = default_theme
+        self.theme_list = theme_list
 
         self._setup_columns()
         self._setup_scroll()
@@ -44,7 +45,7 @@ class ThemeSelector(Gtk.Frame):
 
     def load_themes(self):
         default_name = self.default_theme_name  # 比如 "default"
-        for name, author, desc, path in get_themes():
+        for name, author, desc, path in self.theme_list:
             icon = "emblem-ok-symbolic" if os.path.basename(path) == default_name else None
             self.liststore.append([icon,name, author, desc, path])
 
