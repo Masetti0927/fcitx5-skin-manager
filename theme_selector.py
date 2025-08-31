@@ -9,8 +9,9 @@ from theme_utils import get_themes,get_default_theme
 
 class ThemeSelector(Gtk.Frame):
     def __init__(self):
-        super().__init__(label="主题选择器")
+        super().__init__(label=None)
 
+        self.set_shadow_type(Gtk.ShadowType.NONE)
         # 是否为默认（图标名）、皮肤名、作者、描述、路径
         self.liststore = Gtk.ListStore(str, str, str, str, str)
         self.treeview = Gtk.TreeView(model=self.liststore)
