@@ -78,4 +78,4 @@ def change_theme(theme_folder_name):
     print(f"已切换到主题: {theme_folder_name}")
 
 if __name__ == "__main__":
-    get_themes()
+    change_theme("plasma")

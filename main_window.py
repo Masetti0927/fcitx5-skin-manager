@@ -10,6 +10,7 @@ class MainWindow(Gtk.Window):
     def __init__(self):
         super().__init__(title="Fcitx5主题管理器")
         self.default_theme = get_default_theme()
+        self.picked_theme = None
         self.theme_list = get_themes()
         self.set_default_size(800, 500)
 
@@ -22,14 +23,14 @@ class MainWindow(Gtk.Window):
         grid.set_margin_end(20)
 
         # 左侧：主题选择器区域
-        theme_frame = ThemeSelector(self.default_theme,self.theme_list)
+        theme_frame = ThemeSelector(self)
         theme_frame.set_hexpand(True)
         theme_frame.set_vexpand(True)
         theme_frame.set_size_request(500, -1)  # 限制最大宽度
         grid.attach(theme_frame, 0, 0, 1, 1)
 
         # 右侧：交互按钮区域
-        panel = ButtonPanel()
+        panel = ButtonPanel(self)
         grid.attach(panel, 1, 0, 1, 1)
 
         self.add(grid)

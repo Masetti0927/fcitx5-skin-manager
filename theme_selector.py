@@ -5,18 +5,16 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Pango", "1.0")
 from gi.repository import Gtk, Pango,Gdk
 
-from theme_utils import get_themes,get_default_theme
-
 class ThemeSelector(Gtk.Frame):
-    def __init__(self,default_theme,theme_list):
+    def __init__(self,parent_window):
         super().__init__(label=None)
-
         self.set_shadow_type(Gtk.ShadowType.NONE)
+        self.parent = parent_window
+
+
         # 是否为默认（图标名）、皮肤名、作者、描述、路径
         self.liststore = Gtk.ListStore(str, str, str, str, str)
         self.treeview = Gtk.TreeView(model=self.liststore)
-        self.default_theme_name = default_theme
-        self.theme_list = theme_list
 
         self._setup_columns()
         self._setup_scroll()
@@ -44,8 +42,8 @@ class ThemeSelector(Gtk.Frame):
         self.add(scroll)
 
     def load_themes(self):
-        default_name = self.default_theme_name  # 比如 "default"
-        for name, author, desc, path in self.theme_list:
+        default_name = self.parent.default_theme  # 比如 "default"
+        for name, author, desc, path in self.parent.theme_list:
             icon = "emblem-ok-symbolic" if os.path.basename(path) == default_name else None
             self.liststore.append([icon,name, author, desc, path])
 
@@ -56,6 +54,8 @@ class ThemeSelector(Gtk.Frame):
         author = model.get_value(tree_iter, 2)
         description = model.get_value(tree_iter, 3)
         folder_path = model.get_value(tree_iter, 4)
+        self.parent.picked_theme = os.path.basename(folder_path)
+        print("调试信息："+self.parent.picked_theme)
         print(f"你选择了皮肤：{name}\n作者：{author}\n描述：{description}\n路径：{folder_path}")
 
     def on_row_clicked(self, treeview, event):
