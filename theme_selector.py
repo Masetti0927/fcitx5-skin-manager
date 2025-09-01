@@ -5,11 +5,14 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("Pango", "1.0")
 from gi.repository import Gtk,Pango,Gdk
 
+from theme_utils import get_themes
+
 class ThemeSelector(Gtk.Frame):
     def __init__(self,parent_window):
         super().__init__(label=None)
         self.set_shadow_type(Gtk.ShadowType.NONE)
         self.parent = parent_window
+        self.picked_path = ""
 
 
         # 是否为默认、皮肤名、作者、描述、路径
@@ -45,7 +48,7 @@ class ThemeSelector(Gtk.Frame):
 
     def load_themes(self):
         default_name = self.parent.default_theme  # 比如 "default"
-        for name, author, desc, path in self.parent.theme_list:
+        for name, author, desc, path in get_themes():
             icon = "emblem-ok-symbolic" if os.path.basename(path) == default_name else None
             self.liststore.append([icon,name, author, desc, path])
 

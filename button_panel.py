@@ -6,6 +6,7 @@ gi.require_version("Gtk", "3.0")  # 如果你用的是 GTK 4，请改成 "4.0"
 from gi.repository import Gtk
 from config import  THEME_DIRS
 from theme_utils import change_theme
+from ssfconv import convert_skin
 
 class ButtonPanel(Gtk.Frame):
     def __init__(self,parent_window):
@@ -49,8 +50,60 @@ class ButtonPanel(Gtk.Frame):
         else:
             print("路径不存在：", path)
 
-    def on_import(self):
-        pass
+    def on_import(self, button):
+        dest_root = str(THEME_DIRS[0])
+        dialog = Gtk.FileChooserDialog(
+            title="选择皮肤文件或文件夹",
+            parent=self.get_toplevel(),
+            action=Gtk.FileChooserAction.OPEN
+        )
+        dialog.add_buttons(
+            Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+            Gtk.STOCK_OPEN, Gtk.ResponseType.OK
+        )
+
+        # 支持多选
+        dialog.set_select_multiple(True)
+
+        # 添加过滤器：只显示 .ssf 文件和文件夹
+        filter_ssf = Gtk.FileFilter()
+        filter_ssf.set_name("皮肤文件 (*.ssf)")
+        filter_ssf.add_pattern("*.ssf")
+        filter_ssf.add_mime_type("application/octet-stream")  # 可选
+        dialog.add_filter(filter_ssf)
+
+        filter_folder = Gtk.FileFilter()
+        filter_folder.set_name("所有文件")
+        filter_folder.add_pattern("*")
+        dialog.add_filter(filter_folder)
+
+        response = dialog.run()
+        if response == Gtk.ResponseType.OK:
+            files = dialog.get_filenames()  # 返回路径列表
+
+            ssf_files = []
+            for path in files:
+                if os.path.isdir(path):
+                    # 如果是文件夹，遍历其中所有 .ssf 文件
+                    for entry in os.listdir(path):
+                        full_path = os.path.join(path, entry)
+                        if entry.endswith(".ssf") and os.path.isfile(full_path):
+                            ssf_files.append(full_path)
+                elif path.endswith(".ssf"):
+                    ssf_files.append(path)
+
+            dialog.destroy()
+
+            # 调用转换函数
+            for ssf in ssf_files:
+                ssf_name = os.path.splitext(os.path.basename(ssf))[0]  # 去掉路径和扩展名
+                convert_skin(ssf,dest_root+'/'+ssf_name)
+
+            self.parent.theme_frame.refresh()
+
+        else:
+            dialog.destroy()
+            self.parent.theme_frame.refresh()
 
     def on_delete(self):
         pass

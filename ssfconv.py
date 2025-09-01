@@ -659,6 +659,61 @@ def main(args):
 
     return result
 
+
+def convert_skin(src, dest=None, type='fcitx5'):
+    """
+    将 .ssf 文件或皮肤文件夹转换为指定格式。
+
+    参数:
+        src (str): 源文件路径（.ssf 或文件夹）
+        dest (str): 目标路径（zip 文件或输出目录）
+        type (str): 转换类型，可选 'fcitx5' 或 'zip'
+
+    返回:
+        int: 0 表示成功，其他为错误码
+    """
+    tmp_dir = None
+    src = str(src)
+    dest = str(dest)
+
+    if os.path.isfile(src):
+        # 如果是文件，先解压
+        if type == 'zip':
+            tmp_dir = tempfile.mkdtemp()
+            dest_dir = tmp_dir
+        else:
+            if not dest:
+                raise ValueError("必须提供 dest 参数用于解压输出")
+            dest_dir = dest
+
+        extractSsf(src, dest_dir)
+        skin_dir = dest_dir
+
+    elif os.path.isdir(src):
+        skin_dir = src
+    else:
+        sys.stderr.write(f'找不到 {src}\n')
+        return 1
+
+    result = 255
+    if type == 'fcitx5':
+        result = ssf2fcitx5(skin_dir)
+    elif type == 'zip':
+        if not dest:
+            raise ValueError("必须提供 dest 参数用于 zip 输出")
+        file_list = os.listdir(skin_dir)
+        with zipfile.ZipFile(dest, 'w') as zf:
+            for file in file_list:
+                full_path = os.path.join(skin_dir, file)
+                if os.path.isfile(full_path):
+                    zf.write(full_path, file)
+        result = 0
+
+    if tmp_dir:
+        shutil.rmtree(tmp_dir)
+
+    return result
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description = \
         'Sogou input method skin file (.ssf file) converter.')

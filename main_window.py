@@ -12,6 +12,7 @@ class MainWindow(Gtk.Window):
         self.default_theme = get_default_theme()
         self.theme_list = get_themes()
         self.picked_theme = self.default_theme
+        # self.picked_path =
         self.set_default_size(800, 500)
 
         self.grid = Gtk.Grid()
