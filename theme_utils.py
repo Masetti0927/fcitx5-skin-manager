@@ -77,5 +77,6 @@ def change_theme(theme_folder_name):
     iface.ReloadConfig()
     print(f"已切换到主题: {theme_folder_name}")
 
+# debug
 if __name__ == "__main__":
     change_theme("plasma")

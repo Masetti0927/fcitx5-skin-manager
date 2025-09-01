@@ -6,6 +6,7 @@ THEME_DIRS = [
     Path.home() / ".local/share/fcitx5/themes",
     Path("/usr/share/fcitx5/themes")
 ]
+
 #主题配置文件
 THEME_CONF = Path.home() / ".config/fcitx5/conf/classicui.conf"
 

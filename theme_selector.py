@@ -3,7 +3,7 @@ import gi
 import os
 gi.require_version("Gtk", "3.0")
 gi.require_version("Pango", "1.0")
-from gi.repository import Gtk, Pango,Gdk
+from gi.repository import Gtk,Pango,Gdk
 
 class ThemeSelector(Gtk.Frame):
     def __init__(self,parent_window):
@@ -12,13 +12,15 @@ class ThemeSelector(Gtk.Frame):
         self.parent = parent_window
 
 
-        # 是否为默认（图标名）、皮肤名、作者、描述、路径
+        # 是否为默认、皮肤名、作者、描述、路径
         self.liststore = Gtk.ListStore(str, str, str, str, str)
         self.treeview = Gtk.TreeView(model=self.liststore)
 
         self._setup_columns()
         self._setup_scroll()
         self.load_themes()
+
+        self.refresh() # 初始化完成后立刻刷新一次控件状态，获取最新数据
 
     def _setup_columns(self):
         renderer = Gtk.CellRendererText()
@@ -54,8 +56,15 @@ class ThemeSelector(Gtk.Frame):
         author = model.get_value(tree_iter, 2)
         description = model.get_value(tree_iter, 3)
         folder_path = model.get_value(tree_iter, 4)
-        self.parent.default_theme = os.path.basename(folder_path)
-        # print("调试信息："+self.parent.picked_theme)
+        self.parent.picked_theme = os.path.basename(folder_path)
+
+        #调试信息
+        print("----------------------------------")
+        print(f"默认：{self.parent.default_theme}")
+        print(f"当前选择：{self.parent.picked_theme}")
+        print("----------------------------------")
+
+        self.parent.panel_frame.refresh()
         print(f"你选择了皮肤：{name}\n作者：{author}\n描述：{description}\n路径：{folder_path}")
 
     def on_row_clicked(self, treeview, event):
@@ -66,8 +75,11 @@ class ThemeSelector(Gtk.Frame):
                 self.on_row_activated(treeview, path, column)
 
     def refresh(self):
-        selected_path = self.treeview.get_cursor()[0]  # 获取当前选中行
         self.liststore.clear()
         self.load_themes()
-        if selected_path:
-            self.treeview.set_cursor(selected_path)
+
+        # 遍历 liststore，找到有默认图标的那一行
+        for i, row in enumerate(self.liststore):
+            if row[0] == "emblem-ok-symbolic":  # 第一列是icon
+                self.treeview.set_cursor(Gtk.TreePath(i))
+                break

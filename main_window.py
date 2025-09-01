@@ -11,6 +11,7 @@ class MainWindow(Gtk.Window):
         super().__init__(title="Fcitx5主题管理器")
         self.default_theme = get_default_theme()
         self.theme_list = get_themes()
+        self.picked_theme = self.default_theme
         self.set_default_size(800, 500)
 
         self.grid = Gtk.Grid()
